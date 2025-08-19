@@ -20,6 +20,7 @@ package org.dependencytrack.model;
 
 import alpine.server.json.TrimmedStringDeserializer;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.Serializable;
@@ -35,6 +36,9 @@ import java.util.Objects;
 public class OrganizationalContact implements Serializable {
 
     private static final long serialVersionUID = -1026863376484187244L;
+
+    @JsonProperty("bom-ref")
+    private  String bomRef;
 
     @JsonDeserialize(using = TrimmedStringDeserializer.class)
     private String name;
@@ -67,6 +71,14 @@ public class OrganizationalContact implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getBomRef() {
+        return  bomRef;
+    }
+
+    public void  setBomRef(String bomRef) {
+        this.bomRef = bomRef;
     }
 
     @Override

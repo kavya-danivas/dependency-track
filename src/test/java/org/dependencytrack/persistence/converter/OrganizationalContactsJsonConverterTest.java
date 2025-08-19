@@ -31,14 +31,17 @@ class OrganizationalContactsJsonConverterTest {
     @Test
     void testConvertToDatastore() {
         final var contact = new OrganizationalContact();
+        contact.setBomRef("author-1");
         contact.setName("Foo");
         contact.setEmail("foo@example.com");
         contact.setPhone("123456789");
+        contact.setBomRef("urn:uuid:123e4567-e89b-12d3-a456-426614174000");
 
         assertThatJson(new OrganizationalContactsJsonConverter().convertToDatastore(List.of(contact)))
                 .isEqualTo("""
                         [
                           {
+                            "bom-ref": "urn:uuid:123e4567-e89b-12d3-a456-426614174000",
                             "name": "Foo",
                             "email": "foo@example.com",
                             "phone": "123456789"

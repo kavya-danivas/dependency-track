@@ -412,6 +412,7 @@ public class ModelConverter {
                 contact.setName(cdxContact.getName());
                 contact.setEmail(cdxContact.getEmail());
                 contact.setPhone(cdxContact.getPhone());
+                contact.setBomRef(cdxContact.getBomRef());
                 contacts.add(contact);
             }
             entity.setContacts(contacts);
@@ -532,7 +533,14 @@ public class ModelConverter {
         final var cdxContact = new org.cyclonedx.model.OrganizationalContact();
         cdxContact.setName(StringUtils.trimToNull(dtContact.getName()));
         cdxContact.setEmail(StringUtils.trimToNull(dtContact.getEmail()));
-        cdxContact.setPhone(StringUtils.trimToNull(cdxContact.getPhone()));
+        cdxContact.setPhone(StringUtils.trimToNull(dtContact.getPhone()));
+
+        String bomRef = dtContact.getBomRef();
+        if (bomRef == null) {
+            bomRef = "urn:uuid:" + UUID.randomUUID();
+            dtContact.setBomRef(bomRef);
+        }
+        cdxContact.setBomRef(bomRef);
         return cdxContact;
     }
 
@@ -705,6 +713,12 @@ public class ModelConverter {
             final org.cyclonedx.model.Component cycloneComponent = new org.cyclonedx.model.Component();
             cycloneComponent.setBomRef(project.getUuid().toString());
             cycloneComponent.setAuthor(StringUtils.trimToNull(convertContactsToString(project.getAuthors())));
+            cycloneComponent.setAuthors(convertContacts(project.getAuthors()));
+            if (project.getMetadata() != null && project.getMetadata().getAuthors() != null) {
+                metadata.setAuthors(convertContacts(project.getMetadata().getAuthors()));
+            } else if (project.getAuthors() != null) {
+                metadata.setAuthors(convertContacts(project.getAuthors()));
+            }
             cycloneComponent.setPublisher(StringUtils.trimToNull(project.getPublisher()));
             cycloneComponent.setGroup(StringUtils.trimToNull(project.getGroup()));
             cycloneComponent.setName(StringUtils.trimToNull(project.getName()));
